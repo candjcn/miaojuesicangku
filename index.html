@@ -1,201 +1,561 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>寺庙仓库管理</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
-    header {
-      background-color: #4CAF50;
-      color: white;
-      text-align: center;
-      padding: 10px 0;
-    }
-    .container {
-      padding: 10px;
-    }
-    .button {
-      display: inline-block;
-      background-color: #4CAF50;
-      color: white;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 5px;
-      margin: 10px;
-    }
-    .button:hover {
-      background-color: #45a049;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    table th, table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    table th {
-      background-color: #4CAF50;
-      color: white;
-    }
-    table tr:hover {
-      background-color: #f1f1f1;
-    }
-    input, select, button {
-      padding: 10px;
-      margin: 5px 0;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 100%;
-    }
-    button {
-      background-color: #4CAF50;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-    footer {
-      text-align: center;
-      padding: 10px 0;
-      background-color: #4CAF50;
-      color: white;
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>寺庙仓库管理系统</title>
+    <style>
+        :root {
+            --primary-color: #8BC34A;
+            --secondary-color: #689F38;
+            --danger-color: #F44336;
+            --light-color: #F5F5F5;
+            --dark-color: #333;
+            --border-color: #E0E0E0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            margin: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        button.danger {
+            background-color: var(--danger-color);
+        }
+        
+        button.danger:hover {
+            background-color: #D32F2F;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--light-color);
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background-color: rgba(0,0,0,0.02);
+        }
+        
+        .action-btn {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .search-box {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .search-box input {
+            padding-left: 35px;
+        }
+        
+        .search-box:before {
+            content: "🔍";
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            margin: 0 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 30px 0;
+            color: #999;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .modal-title {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .modal-footer {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .modal-footer button {
+            width: auto;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .stats {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                margin: 5px 0;
+            }
+            
+            th, td {
+                padding: 8px 5px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>寺庙仓库管理</h1>
-  </header>
-  <div class="container">
-    <h2>物品出入库记录</h2>
-    <table id="inventoryTable">
-      <thead>
-        <tr>
-          <th>物品名称</th>
-          <th>类别</th>
-          <th>数量</th>
-          <th>操作</th>
-          <th>时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- 数据会动态加载到这里 -->
-      </tbody>
-    </table>
-
-    <h2>添加物品记录</h2>
-    <form id="recordForm">
-      <label for="itemName">物品名称：</label>
-      <input type="text" id="itemName" placeholder="请输入物品名称" required>
-
-      <label for="category">类别：</label>
-      <select id="category" required>
-        <option value="">请选择类别</option>
-        <option value="食品">食品</option>
-        <option value="日用品">日用品</option>
-        <option value="其他">其他</option>
-      </select>
-
-      <label for="quantity">数量：</label>
-      <input type="number" id="quantity" placeholder="请输入数量" required>
-
-      <label for="operation">操作：</label>
-      <select id="operation" required>
-        <option value="">请选择操作</option>
-        <option value="入库">入库</option>
-        <option value="出库">出库</option>
-      </select>
-
-      <button type="submit">添加记录</button>
-    </form>
-  </div>
-
-  <footer>
-    <p>© 2023 寺庙仓库管理系统</p>
-  </footer>
-
-  <script>
-    // 本地存储的键名
-    const STORAGE_KEY = 'temple_warehouse';
-
-    // 获取页面元素
-    const inventoryTableBody = document.querySelector('#inventoryTable tbody');
-    const recordForm = document.querySelector('#recordForm');
-    const itemNameInput = document.querySelector('#itemName');
-    const categoryInput = document.querySelector('#category');
-    const quantityInput = document.querySelector('#quantity');
-    const operationInput = document.querySelector('#operation');
-
-    // 加载数据
-    function loadData() {
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      renderTable(data);
-    }
-
-    // 渲染表格
-    function renderTable(data) {
-      inventoryTableBody.innerHTML = ''; // 清空表格
-      data.forEach((item, index) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.name}</td>
-          <td>${item.category}</td>
-          <td>${item.quantity}</td>
-          <td>${item.operation}</td>
-          <td>${new Date(item.time).toLocaleString()}</td>
-        `;
-        inventoryTableBody.appendChild(row);
-      });
-    }
-
-    // 添加记录
-    function addRecord(event) {
-      event.preventDefault(); // 阻止表单默认提交行为
-
-      const name = itemNameInput.value.trim();
-      const category = categoryInput.value.trim();
-      const quantity = parseInt(quantityInput.value.trim(), 10);
-      const operation = operationInput.value.trim();
-      const time = Date.now();
-
-      if (!name || !category || isNaN(quantity) || !operation) {
-        alert('请填写完整信息！');
-        return;
-      }
-
-      // 获取现有数据
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      data.push({ name, category, quantity, operation, time });
-
-      // 保存到本地存储
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-
-      // 清空表单
-      recordForm.reset();
-
-      // 刷新表格
-      renderTable(data);
-    }
-
-    // 绑定事件
-    recordForm.addEventListener('submit', addRecord);
-
-    // 页面加载时加载数据
-    window.onload = loadData;
-  </script>
-</body>
-</html>
+    <header>
+        <div class="container">
+            <h1>寺庙仓库管理系统</h1>
+            <div class="subtitle">物品出入库记录与统计</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="dashboard">总览</div>
+            <div class="tab" data-tab="items">物品管理</div>
+            <div class="tab" data-tab="transactions">出入库记录</div>
+            <div class="tab" data-tab="settings">数据管理</div>
+        </div>
+        
+        <!-- 仪表盘 -->
+        <div class="tab-content active" id="dashboard">
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-items">0</div>
+                    <div class="stat-label">物品总数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-stock">0</div>
+                    <div class="stat-label">库存总量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="recent-trans">0</div>
+                    <div class="stat-label">今日记录</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>库存预警</h3>
+                <table id="warning-table">
+                    <thead>
+                        <tr>
+                            <th>物品名称</th>
+                            <th>当前库存</th>
+                            <th>预警值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 动态生成 -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="no-warning">暂无库存预警</div>
+            </div>
+            
+            <div class="card">
+                <h3>最近出入库记录</h3>
+                <table id="recent-transactions">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>物品</th>
+                            <th>类型</th>
+                            <th>数量</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 动态生成 -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="no-recent">暂无最近记录</div>
+            </div>
+        </div>
+        
+        <!-- 物品管理 -->
+        <div class="tab-content" id="items">
+            <div class="search-box">
+                <input type="text" id="item-search" placeholder="搜索物品...">
+            </div>
+            
+            <div class="card">
+                <h3>添加新物品</h3>
+                <form id="add-item-form">
+                    <div class="form-group">
+                        <label for="item-name">物品名称</label>
+                        <input type="text" id="item-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-category">类别</label>
+                        <select id="item-category" required>
+                            <option value="">请选择类别</option>
+                            <option value="食品">食品</option>
+                            <option value="日用品">日用品</option>
+                            <option value="佛具">佛具</option>
+                            <option value="建材">建材</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-unit">单位</label>
+                        <input type="text" id="item-unit" placeholder="如：袋、箱、个" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-warning">库存预警值</label>
+                        <input type="number" id="item-warning" placeholder="低于此值会预警" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="item-description">描述</label>
+                        <input type="text" id="item-description" placeholder="可选">
+                    </div>
+                    <button type="submit">添加物品</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h3>物品列表</h3>
+                <table id="item-list">
+                    <thead>
+                        <tr>
+                            <th>物品名称</th>
+                            <th>类别</th>
+                            <th>库存</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 动态生成 -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="no-items">暂无物品记录</div>
+            </div>
+        </div>
+        
+        <!-- 出入库记录 -->
+        <div class="tab-content" id="transactions">
+            <div class="search-box">
+                <input type="text" id="trans-search" placeholder="搜索记录...">
+            </div>
+            
+            <div class="card">
+                <h3>添加出入库记录</h3>
+                <form id="add-transaction-form">
+                    <div class="form-group">
+                        <label for="trans-item">物品</label>
+                        <select id="trans-item" required>
+                            <option value="">请选择物品</option>
+                            <!-- 动态生成 -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trans-type">类型</label>
+                        <select id="trans-type" required>
+                            <option value="">请选择类型</option>
+                            <option value="in">入库</option>
+                            <option value="out">出库</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trans-quantity">数量</label>
+                        <input type="number" id="trans-quantity" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trans-operator">操作人</label>
+                        <input type="text" id="trans-operator" placeholder="请输入操作人姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trans-notes">备注</label>
+                        <input type="text" id="trans-notes" placeholder="可选">
+                    </div>
+                    <button type="submit">添加记录</button>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h3>出入库记录</h3>
+                <table id="transaction-list">
+                    <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>物品</th>
+                            <th>类型</th>
+                            <th>数量</th>
+                            <th>操作人</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 动态生成 -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="no-transactions">暂无出入库记录</div>
+            </div>
+        </div>
+        
+        <!-- 数据管理 -->
+        <div class="tab-content" id="settings">
+            <div class="card">
+                <h3>数据备份与恢复</h3>
+                <button id="export-data">导出数据</button>
+                <button id="import-data">导入数据</button>
+                <input type="file" id="file-input" style="display: none;">
+            </div>
+            
+            <div class="card">
+                <h3>数据统计</h3>
+                <button id="generate-report">生成统计报表</button>
+                <div id="report-result" style="margin-top: 15px;"></div>
+            </div>
+            
+            <div class="card">
+                <h3>系统设置</h3>
+                <div class="form-group">
+                    <label for="warning-color">预警颜色</label>
+                    <select id="warning-color">
+                        <option value="#FF5252">红色</option>
+                        <option value="#FF9800">橙色</option>
+                        <option value="#FFEB3B">黄色</option>
+                    </select>
+                </div>
+                <button id="save-settings">保存设置</button>
+            </div>
+            
+            <div class="card">
+                <h3>数据清理</h3>
+                <button class="danger" id="clear-data">清空所有数据</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 编辑物品模态框 -->
+    <div class="modal" id="edit-item-modal">
+        <div class="modal-content">
+            <div class="modal-title">编辑物品信息</div>
+            <form id="edit-item-form">
+                <input type="hidden" id="edit-item-id">
+                <div class="form-group">
+                    <label for="edit-item-name">物品名称</label>
+                    <input type="text" id="edit-item-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-item-category">类别</label>
+                    <select id="edit-item-category" required>
+                        <option value="">请选择类别</option>
+                        <option value="食品">食品</option>
+                        <option value="日用品">日用品</option>
+                        <option value="佛具">佛具</option>
+                        <option value="建材">建材</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-item-unit">单位</label>
+                    <input type="text" id="edit-item-unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-item-warning">库存预警值</label>
+                    <input type="number" id="edit-item-warning" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="edit-item-description">描述</label>
+                    <input type="text" id="edit-item-description">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="danger" id="cancel-edit">取消</button>
+                    <button type="submit">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 确认删除模态框 -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content">
+            <div class="modal-title" id="confirm-title">确认删除</div>
+            <div id="confirm-message">您确定要删除此物品吗？</div>
+            <div class="modal-footer">
+                <button type="button" id="cancel-delete">取消</button>
+                <button type="button" class="danger" id="confirm-delete">删除</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 本地存储键名
+        const STORAGE_KEYS = {
+            ITEMS: 'temple_warehouse_items',
+            TRANSACTIONS: 'temple_warehouse_transactions',
+            SETTINGS: 'temple_warehouse_settings'
+        };
+        
+        // 初始化数据
+        let items = JSON.parse(localStorage.getItem(STORAGE_KEYS.ITEMS)) || [];
+        let transactions = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) || [];
+        let settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS)) || {
+            warningColor: '#FF5252'
+        };
+        
+        // DOM元素
+        const tabContents = document.querySelectorAll('.tab-content');
+        const tabs = document.querySelectorAll('.tab');
+        const itemList = document.getElementById('
