@@ -2,560 +2,306 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>寺庙仓库管理系统</title>
     <style>
-        :root {
-            --primary-color: #8BC34A;
-            --secondary-color: #689F38;
-            --danger-color: #F44336;
-            --light-color: #F5F5F5;
-            --dark-color: #333;
-            --border-color: #E0E0E0;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Microsoft YaHei', sans-serif;
-        }
-        
-        body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            line-height: 1.6;
-            font-size: 16px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-        
-        header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-        
-        .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        .tabs {
-            display: flex;
-            margin: 15px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .tab {
-            padding: 10px 15px;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .tab.active {
-            border-bottom-color: var(--primary-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-        
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-            width: 100%;
-            margin-top: 5px;
-        }
-        
-        button:hover {
-            background-color: var(--secondary-color);
-        }
-        
-        button.danger {
-            background-color: var(--danger-color);
-        }
-        
-        button.danger:hover {
-            background-color: #D32F2F;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9rem;
-        }
-        
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        th {
-            background-color: var(--light-color);
-            font-weight: bold;
-        }
-        
-        tr:hover {
-            background-color: rgba(0,0,0,0.02);
-        }
-        
-        .action-btn {
-            padding: 5px 8px;
-            font-size: 0.8rem;
-            margin-right: 5px;
-        }
-        
-        .search-box {
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .search-box input {
-            padding-left: 35px;
-        }
-        
-        .search-box:before {
-            content: "🔍";
-            position: absolute;
-            left: 10px;
-            top: 10px;
-        }
-        
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        
-        .stat-item {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            background-color: white;
-            border-radius: 8px;
-            margin: 0 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .stat-label {
-            font-size: 0.8rem;
-            color: #666;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 30px 0;
-            color: #999;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-        }
-        
-        .modal-title {
-            margin-bottom: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        .modal-footer {
-            margin-top: 15px;
-            display: flex;
-            justify-content: flex-end;
-        }
-        
-        .modal-footer button {
-            width: auto;
-            margin-left: 10px;
-        }
-        
-        @media (max-width: 600px) {
-            .stats {
-                flex-direction: column;
-            }
-            
-            .stat-item {
-                margin: 5px 0;
-            }
-            
-            th, td {
-                padding: 8px 5px;
-                font-size: 0.8rem;
-            }
-        }
+        :root { --primary: #4CAF50; --warning: #ff9800; --danger: #f44336; }
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { margin: 0; padding: 10px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .tabs { display: flex; margin-bottom: 10px; }
+        .tab { flex:1; padding:10px; text-align:center; background:#ddd; border:none; cursor:pointer; }
+        .tab.active { background:var(--primary); color:white; }
+        .card { background:white; padding:15px; margin-bottom:10px; border-radius:5px; box-shadow:0 2px 4px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom:10px; }
+        input, select, button { width:100%; padding:8px; border:1px solid #ddd; border-radius:4px; }
+        button { background:var(--primary); color:white; border:none; margin:2px; }
+        button.warning { background:var(--warning); }
+        button.danger { background:var(--danger); }
+        .table { width:100%; border-collapse:collapse; }
+        .table td, .table th { padding:8px; border-bottom:1px solid #ddd; text-align:left; }
+        .alert { background:#ffeb3b; padding:10px; margin:10px 0; border-radius:4px; }
+        @media (min-width: 600px) { .cols { display:flex; gap:10px; } .cols > * { flex:1; } }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>寺庙仓库管理系统</h1>
-            <div class="subtitle">物品出入库记录与统计</div>
-        </div>
-    </header>
-    
-    <div class="container">
-        <div class="tabs">
-            <div class="tab active" data-tab="dashboard">总览</div>
-            <div class="tab" data-tab="items">物品管理</div>
-            <div class="tab" data-tab="transactions">出入库记录</div>
-            <div class="tab" data-tab="settings">数据管理</div>
-        </div>
-        
-        <!-- 仪表盘 -->
-        <div class="tab-content active" id="dashboard">
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-value" id="total-items">0</div>
-                    <div class="stat-label">物品总数</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="total-stock">0</div>
-                    <div class="stat-label">库存总量</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="recent-trans">0</div>
-                    <div class="stat-label">今日记录</div>
-                </div>
+<div class="container">
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('dashboard')">📊 仪表盘</button>
+        <button class="tab" onclick="showTab('items')">📦 物品</button>
+        <button class="tab" onclick="showTab('in')">⬇️ 入库</button>
+        <button class="tab" onclick="showTab('out')">⬆️ 出库</button>
+        <button class="tab" onclick="showTab('reports')">📈 报表</button>
+    </div>
+
+    <!-- 仪表盘 -->
+    <div id="dashboard" class="tab-content">
+        <div class="cols">
+            <div class="card">
+                <h3>仓库概览</h3>
+                <p>总物品数: <span id="totalItems">0</span></p>
+                <p>库存总量: <span id="totalStock">0</span></p>
+                <p>预警物品: <span id="warningItems">0</span></p>
             </div>
-            
             <div class="card">
                 <h3>库存预警</h3>
-                <table id="warning-table">
-                    <thead>
-                        <tr>
-                            <th>物品名称</th>
-                            <th>当前库存</th>
-                            <th>预警值</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 动态生成 -->
-                    </tbody>
-                </table>
-                <div class="empty-state" id="no-warning">暂无库存预警</div>
-            </div>
-            
-            <div class="card">
-                <h3>最近出入库记录</h3>
-                <table id="recent-transactions">
-                    <thead>
-                        <tr>
-                            <th>时间</th>
-                            <th>物品</th>
-                            <th>类型</th>
-                            <th>数量</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 动态生成 -->
-                    </tbody>
-                </table>
-                <div class="empty-state" id="no-recent">暂无最近记录</div>
+                <div id="alertsList"></div>
             </div>
         </div>
-        
-        <!-- 物品管理 -->
-        <div class="tab-content" id="items">
-            <div class="search-box">
-                <input type="text" id="item-search" placeholder="搜索物品...">
-            </div>
-            
-            <div class="card">
-                <h3>添加新物品</h3>
-                <form id="add-item-form">
-                    <div class="form-group">
-                        <label for="item-name">物品名称</label>
-                        <input type="text" id="item-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-category">类别</label>
-                        <select id="item-category" required>
-                            <option value="">请选择类别</option>
-                            <option value="食品">食品</option>
-                            <option value="日用品">日用品</option>
-                            <option value="佛具">佛具</option>
-                            <option value="建材">建材</option>
-                            <option value="其他">其他</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-unit">单位</label>
-                        <input type="text" id="item-unit" placeholder="如：袋、箱、个" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="item-warning">库存预警值</label>
-                        <input type="number" id="item-warning" placeholder="低于此值会预警" min="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="item-description">描述</label>
-                        <input type="text" id="item-description" placeholder="可选">
-                    </div>
-                    <button type="submit">添加物品</button>
-                </form>
-            </div>
-            
-            <div class="card">
-                <h3>物品列表</h3>
-                <table id="item-list">
-                    <thead>
-                        <tr>
-                            <th>物品名称</th>
-                            <th>类别</th>
-                            <th>库存</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 动态生成 -->
-                    </tbody>
-                </table>
-                <div class="empty-state" id="no-items">暂无物品记录</div>
-            </div>
-        </div>
-        
-        <!-- 出入库记录 -->
-        <div class="tab-content" id="transactions">
-            <div class="search-box">
-                <input type="text" id="trans-search" placeholder="搜索记录...">
-            </div>
-            
-            <div class="card">
-                <h3>添加出入库记录</h3>
-                <form id="add-transaction-form">
-                    <div class="form-group">
-                        <label for="trans-item">物品</label>
-                        <select id="trans-item" required>
-                            <option value="">请选择物品</option>
-                            <!-- 动态生成 -->
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="trans-type">类型</label>
-                        <select id="trans-type" required>
-                            <option value="">请选择类型</option>
-                            <option value="in">入库</option>
-                            <option value="out">出库</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="trans-quantity">数量</label>
-                        <input type="number" id="trans-quantity" min="1" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="trans-operator">操作人</label>
-                        <input type="text" id="trans-operator" placeholder="请输入操作人姓名" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="trans-notes">备注</label>
-                        <input type="text" id="trans-notes" placeholder="可选">
-                    </div>
-                    <button type="submit">添加记录</button>
-                </form>
-            </div>
-            
-            <div class="card">
-                <h3>出入库记录</h3>
-                <table id="transaction-list">
-                    <thead>
-                        <tr>
-                            <th>时间</th>
-                            <th>物品</th>
-                            <th>类型</th>
-                            <th>数量</th>
-                            <th>操作人</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- 动态生成 -->
-                    </tbody>
-                </table>
-                <div class="empty-state" id="no-transactions">暂无出入库记录</div>
-            </div>
-        </div>
-        
-        <!-- 数据管理 -->
-        <div class="tab-content" id="settings">
-            <div class="card">
-                <h3>数据备份与恢复</h3>
-                <button id="export-data">导出数据</button>
-                <button id="import-data">导入数据</button>
-                <input type="file" id="file-input" style="display: none;">
-            </div>
-            
-            <div class="card">
-                <h3>数据统计</h3>
-                <button id="generate-report">生成统计报表</button>
-                <div id="report-result" style="margin-top: 15px;"></div>
-            </div>
-            
-            <div class="card">
-                <h3>系统设置</h3>
-                <div class="form-group">
-                    <label for="warning-color">预警颜色</label>
-                    <select id="warning-color">
-                        <option value="#FF5252">红色</option>
-                        <option value="#FF9800">橙色</option>
-                        <option value="#FFEB3B">黄色</option>
-                    </select>
-                </div>
-                <button id="save-settings">保存设置</button>
-            </div>
-            
-            <div class="card">
-                <h3>数据清理</h3>
-                <button class="danger" id="clear-data">清空所有数据</button>
-            </div>
+        <div class="card">
+            <h3>最近活动</h3>
+            <div id="recentActivities"></div>
         </div>
     </div>
-    
-    <!-- 编辑物品模态框 -->
-    <div class="modal" id="edit-item-modal">
-        <div class="modal-content">
-            <div class="modal-title">编辑物品信息</div>
-            <form id="edit-item-form">
-                <input type="hidden" id="edit-item-id">
-                <div class="form-group">
-                    <label for="edit-item-name">物品名称</label>
-                    <input type="text" id="edit-item-name" required>
+
+    <!-- 物品管理 -->
+    <div id="items" class="tab-content" style="display:none">
+        <div class="card">
+            <h3>物品管理</h3>
+            <form id="itemForm" onsubmit="return saveItem(event)">
+                <input type="hidden" id="itemId">
+                <div class="form-group"><input type="text" id="itemName" placeholder="物品名称" required></div>
+                <div class="cols">
+                    <div class="form-group">
+                        <select id="itemCategory" required>
+                            <option value="">分类</option>
+                            <option value="佛具">佛具</option>
+                            <option value="法物">法物</option>
+                            <option value="日用品">日用品</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><input type="text" id="itemSpec" placeholder="规格"></div>
+                    <div class="form-group"><input type="text" id="itemUnit" placeholder="单位" required></div>
                 </div>
-                <div class="form-group">
-                    <label for="edit-item-category">类别</label>
-                    <select id="edit-item-category" required>
-                        <option value="">请选择类别</option>
-                        <option value="食品">食品</option>
-                        <option value="日用品">日用品</option>
-                        <option value="佛具">佛具</option>
-                        <option value="建材">建材</option>
-                        <option value="其他">其他</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="edit-item-unit">单位</label>
-                    <input type="text" id="edit-item-unit" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-item-warning">库存预警值</label>
-                    <input type="number" id="edit-item-warning" min="0">
-                </div>
-                <div class="form-group">
-                    <label for="edit-item-description">描述</label>
-                    <input type="text" id="edit-item-description">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="danger" id="cancel-edit">取消</button>
-                    <button type="submit">保存</button>
-                </div>
+                <div class="form-group"><input type="number" id="itemMinStock" placeholder="最低库存" required></div>
+                <button type="submit">💾 保存</button>
             </form>
         </div>
-    </div>
-    
-    <!-- 确认删除模态框 -->
-    <div class="modal" id="confirm-modal">
-        <div class="modal-content">
-            <div class="modal-title" id="confirm-title">确认删除</div>
-            <div id="confirm-message">您确定要删除此物品吗？</div>
-            <div class="modal-footer">
-                <button type="button" id="cancel-delete">取消</button>
-                <button type="button" class="danger" id="confirm-delete">删除</button>
-            </div>
+        <div class="card">
+            <h3>物品列表 <button onclick="exportData()" class="warning">📤 导出数据</button></h3>
+            <div id="itemList"></div>
         </div>
     </div>
+
+    <!-- 入库管理 -->
+    <div id="in" class="tab-content" style="display:none">
+        <div class="card">
+            <h3>物品入库</h3>
+            <form onsubmit="return stockIn(event)">
+                <div class="form-group">
+                    <select id="inItem" required>
+                        <option value="">选择物品</option>
+                        ${loadItemOptions()}
+                    </select>
+                </div>
+                <div class="cols">
+                    <div class="form-group"><input type="number" id="inQty" placeholder="数量" required></div>
+                    <div class="form-group"><input type="text" id="inOperator" placeholder="操作人" required></div>
+                </div>
+                <div class="form-group"><input type="date" id="inDate" required></div>
+                <button type="submit">✅ 确认入库</button>
+            </form>
+        </div>
+        <div class="card">
+            <h3>入库记录</h3>
+            <div id="inRecords"></div>
+        </div>
+    </div>
+
+    <!-- 出库管理 -->
+    <div id="out" class="tab-content" style="display:none">
+        <div class="card">
+            <h3>物品出库</h3>
+            <form onsubmit="return stockOut(event)">
+                <div class="form-group">
+                    <select id="outItem" required>
+                        <option value="">选择物品</option>
+                        ${loadItemOptions()}
+                    </select>
+                </div>
+                <div class="cols">
+                    <div class="form-group"><input type="number" id="outQty" placeholder="数量" required></div>
+                    <div class="form-group"><input type="text" id="outOperator" placeholder="操作人" required></div>
+                </div>
+                <div class="form-group"><input type="date" id="outDate" required></div>
+                <button type="submit">✅ 确认出库</button>
+            </form>
+        </div>
+        <div class="card">
+            <h3>出库记录</h3>
+            <div id="outRecords"></div>
+        </div>
+    </div>
+
+    <!-- 统计报表 -->
+    <div id="reports" class="tab-content" style="display:none">
+        <div class="card">
+            <h3>库存统计 <select id="reportType" onchange="generateReport()">
+                <option value="month">月度报表</option>
+                <option value="year">年度报表</option>
+            </select></h3>
+            <div id="reportResult"></div>
+        </div>
+        <div class="card">
+            <h3>数据管理</h3>
+            <button onclick="exportData()" class="warning">📤 导出数据</button>
+            <button onclick="importData()" class="primary">📥 导入数据</button>
+            <input type="file" id="fileInput" style="display:none">
+        </div>
+    </div>
+</div>
+
+<script>
+// 数据存储
+let db = {
+    items: JSON.parse(localStorage.getItem('items') || '[]'),
+    inRecords: JSON.parse(localStorage.getItem('inRecords') || '[]'),
+    outRecords: JSON.parse(localStorage.getItem('outRecords') || '[]')
+};
+
+// 通用功能
+function showTab(tabId) {
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(tabId).style.display = 'block';
+    event.target.classList.add('active');
+    if(tabId === 'dashboard') updateDashboard();
+}
+
+// 物品管理
+function saveItem(e) {
+    e.preventDefault();
+    const item = {
+        id: document.getElementById('itemId').value || Date.now().toString(),
+        name: document.getElementById('itemName').value,
+        category: document.getElementById('itemCategory').value,
+        spec: document.getElementById('itemSpec').value,
+        unit: document.getElementById('itemUnit').value,
+        minStock: parseInt(document.getElementById('itemMinStock').value)
+    };
+    const index = db.items.findIndex(i => i.id === item.id);
+    if (index > -1) db.items[index] = item;
+    else db.items.push(item);
+    saveData();
+    document.getElementById('itemForm').reset();
+    renderItems();
+}
+
+function renderItems() {
+    let html = '<table class="table">';
+    db.items.forEach(item => {
+        const stock = getStock(item.id);
+        html += `<tr ${stock < item.minStock ? 'style="background:#ffe082"' : ''}>
+            <td>${item.name} (${item.category})</td>
+            <td>${stock}${item.unit}</td>
+            <td><button onclick="editItem('${item.id}')">✏️</button>
+            <button class="danger" onclick="deleteItem('${item.id}')">🗑️</button></td>
+        </tr>`;
+    });
+    document.getElementById('itemList').innerHTML = html + '</table>';
+    updateDashboard();
+}
+
+function editItem(id) {
+    const item = db.items.find(i => i.id === id);
+    if(item) {
+        document.getElementById('itemId').value = item.id;
+        document.getElementById('itemName').value = item.name;
+        document.getElementById('itemCategory').value = item.category;
+        document.getElementById('itemSpec').value = item.spec;
+        document.getElementById('itemUnit').value = item.unit;
+        document.getElementById('itemMinStock').value = item.minStock;
+    }
+}
+
+function deleteItem(id) {
+    if(confirm('确定删除？')) {
+        db.items = db.items.filter(i => i.id !== id);
+        saveData();
+        renderItems();
+    }
+}
+
+// 入库出库功能
+function stockIn(e) {
+    e.preventDefault();
+    const record = {
+        id: Date.now(),
+        itemId: document.getElementById('inItem').value,
+        qty: parseInt(document.getElementById('inQty').value),
+        operator: document.getElementById('inOperator').value,
+        date: document.getElementById('inDate').value || new Date().toISOString().slice(0,10)
+    };
+    db.inRecords.push(record);
+    saveData();
+    updateDashboard();
+    e.target.reset();
+}
+
+function stockOut(e) {
+    e.preventDefault();
+    const itemId = document.getElementById('outItem').value;
+    const qty = parseInt(document.getElementById('outQty').value);
+    if(getStock(itemId) < qty) return alert('库存不足！');
     
-    <script>
-        // 本地存储键名
-        const STORAGE_KEYS = {
-            ITEMS: 'temple_warehouse_items',
-            TRANSACTIONS: 'temple_warehouse_transactions',
-            SETTINGS: 'temple_warehouse_settings'
-        };
-        
-        // 初始化数据
-        let items = JSON.parse(localStorage.getItem(STORAGE_KEYS.ITEMS)) || [];
-        let transactions = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) || [];
-        let settings = JSON.parse(localStorage.getItem(STORAGE_KEYS.SETTINGS)) || {
-            warningColor: '#FF5252'
-        };
-        
-        // DOM元素
-        const tabContents = document.querySelectorAll('.tab-content');
-        const tabs = document.querySelectorAll('.tab');
-        const itemList = document.getElementById('
+    const record = {
+        id: Date.now(),
+        itemId: itemId,
+        qty: qty,
+        operator: document.getElementById('outOperator').value,
+        date: document.getElementById('outDate').value || new Date().toISOString().slice(0,10)
+    };
+    db.outRecords.push(record);
+    saveData();
+    updateDashboard();
+    e.target.reset();
+}
+
+// 数据统计
+function getStock(itemId) {
+    const inQty = db.inRecords.filter(r => r.itemId === itemId).reduce((a,b) => a + b.qty, 0);
+    const outQty = db.outRecords.filter(r => r.itemId === itemId).reduce((a,b) => a + b.qty, 0);
+    return inQty - outQty;
+}
+
+function updateDashboard() {
+    document.getElementById('totalItems').textContent = db.items.length;
+    document.getElementById('totalStock').textContent = db.items.reduce((a,b) => a + getStock(b.id), 0);
+    const warnings = db.items.filter(item => getStock(item.id) < item.minStock);
+    document.getElementById('warningItems').textContent = warnings.length;
+    
+    let alertsHtml = warnings.map(item => 
+        `${item.name} 库存 ${getStock(item.id)}${item.unit} (最低 ${item.minStock})`).join('
+');
+    document.getElementById('alertsList').innerHTML = alertsHtml || '无预警物品';
+    
+    // 最近活动
+    const activities = [...db.inRecords, ...db.outRecords]
+        .sort((a,b) => b.id - a.id)
+        .slice(0,10)
+        .map(r => {
+            const item = db.items.find(i => i.id === r.itemId);
+            return `${r.date} ${r.qty}${item?.unit} ${item?.name} (${'qty' in r ? '出库' : '入库'})`;
+        });
+    document.getElementById('recentActivities').innerHTML = activities.join('
+') || '暂无活动';
+}
+
+// 数据持久化
+function saveData() {
+    localStorage.setItem('items', JSON.stringify(db.items));
+    localStorage.setItem('inRecords', JSON.stringify(db.inRecords));
+    localStorage.setItem('outRecords', JSON.stringify(db.outRecords));
+}
+
+// 初始化
+function init() {
+    document.getElementById('inDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('outDate').value = new Date().toISOString().slice(0,10);
+    renderItems();
+    updateDashboard();
+}
+init();
+</script>
+</body>
+</html>
