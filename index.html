@@ -1,463 +1,540 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>寺庙仓库管理系统</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Microsoft YaHei', Arial, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>智慧寺院仓库管理系统</title>
+  <style>
+    :root {
+      --primary: #3498db;
+      --danger: #e74c3c;
+      --success: #2ecc71;
+      --text: #2c3e50;
+    }
 
-        body {
-            background-color: #f0f2f5;
-            display: flex;
-            min-height: 100vh;
-            flex-direction: column;
-        }
+    * {
+      box-sizing: border-box;
+    }
 
-        .container {
-            flex: 1;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 15px;
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      margin: 20px 0;
+      color: var(--text);
+    }
 
-        .header {
-            text-align: center;
-            padding: 20px 0;
-            background-color: #2c3e50;
-            color: white;
-            border-radius: 10px 10px 0 0;
-        }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
 
-        .section {
-            margin-bottom: 20px;
-        }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #34495e;
-        }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+    }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #bdc3c7;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
 
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    button.danger {
+      background: var(--danger);
+    }
 
-        button:hover {
-            background-color: #2980b9;
-        }
+    button.success {
+      background: var(--success);
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+    table {
+      width: 100%;
+      min-width: 600px;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
 
-        th {
-            background-color: #2c3e50;
-            color: white;
-        }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
 
-        tr:hover {
-            background-color: #f5f6fa;
-        }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+    }
 
-        .warning {
-            color: #e74c3c;
-            font-weight: bold;
-        }
+    .warning {
+      color: var(--danger);
+      font-weight: 500;
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .card {
-                padding: 15px;
-            }
-        }
-    </style>
+    @media (min-width: 768px) {
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+    }
+
+    .mb-0 { margin-bottom: 0 !important; }
+    .mt-20 { margin-top: 20px; }
+    .text-center { text-align: center; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>寺庙仓库管理系统</h1>
-        </div>
+  <div class="container">
+    <h1>智慧寺院仓库管理系统</h1>
 
-        <div class="card">
-            <h2>物品管理</h2>
-            <div class="form-group">
-                <label for="itemName">物品名称：</label>
-                <input type="text" id="itemName" required>
-            </div>
-            <div class="form-group">
-                <label for="itemCategory">分类：</label>
-                <select id="itemCategory" required>
-                    <option value="">请选择分类</option>
-                    <option value="佛具">佛具</option>
-                    <option value="法物">法物</option>
-                    <option value="日用品">日用品</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="itemSpec">规格：</label>
-                <input type="text" id="itemSpec">
-            </div>
-            <div class="form-group">
-                <label for="itemUnit">单位：</label>
-                <input type="text" id="itemUnit" required>
-            </div>
-            <div class="form-group">
-                <label for="itemMinStock">最低库存预警：</label>
-                <input type="number" id="itemMinStock" required>
-            </div>
-            <button onclick="addItem()">添加物品</button>
-        </div>
-
-        <div class="card">
-            <h2>库存预警</h2>
-            <table id="warningTable">
-                <tr>
-                    <th>物品名称</th>
-                    <th>当前库存</th>
-                    <th>预警值</th>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h2>入库记录</h2>
-            <div class="form-group">
-                <label for="inItem">选择物品：</label>
-                <select id="inItem" required>
-                    <option value="">请选择物品</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="inQuantity">入库数量：</label>
-                <input type="number" id="inQuantity" required>
-            </div>
-            <div class="form-group">
-                <label for="inDate">入库日期：</label>
-                <input type="date" id="inDate" required>
-            </div>
-            <button onclick="addInbound()">入库</button>
-        </div>
-
-        <div class="card">
-            <h2>出库记录</h2>
-            <div class="form-group">
-                <label for="outItem">选择物品：</label>
-                <select id="outItem" required>
-                    <option value="">请选择物品</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="outQuantity">出库数量：</label>
-                <input type="number" id="outQuantity" required>
-            </div>
-            <div class="form-group">
-                <label for="outDate">出库日期：</label>
-                <input type="date" id="outDate" required>
-            </div>
-            <button onclick="addOutbound()">出库</button>
-        </div>
-
-        <div class="card">
-            <h2>库存统计</h2>
-            <table id="inventoryTable">
-                <tr>
-                    <th>物品名称</th>
-                    <th>当前库存</th>
-                    <th>最低预警</th>
-                    <th>状态</th>
-                </tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h2>数据管理</h2>
-            <button onclick="exportData()">导出数据</button>
-            <button onclick="importData()">导入数据</button>
-        </div>
-
-        <script>
-            // 本地存储键名定义
-            const STORAGE_KEY = {
-                ITEMS: 'temple_items',
-                INBOUND: 'temple_inbound',
-                OUTBOUND: 'temple_outbound'
-            };
-
-            // 初始化数据
-            let items = JSON.parse(localStorage.getItem(STORAGE_KEY.ITEMS)) || [];
-            let inboundRecords = JSON.parse(localStorage.getItem(STORAGE_KEY.INBOUND)) || [];
-            let outboundRecords = JSON.parse(localStorage.getItem(STORAGE_KEY.OUTBOUND)) || [];
-
-            // 自动生成唯一ID
-            let itemIdCounter = items.length > 0 ? Math.max(...items.map(item => item.id)) + 1 : 1;
-            let inboundIdCounter = inboundRecords.length > 0 ? Math.max(...inboundRecords.map(r => r.id)) + 1 : 1;
-            let outboundIdCounter = outboundRecords.length > 0 ? Math.max(...outboundRecords.map(r => r.id)) + 1 : 1;
-
-            // 更新界面
-            function updateUI() {
-                updateItemList();
-                updateWarningTable();
-                updateInventoryTable();
-                updateSelectOptions();
-            }
-
-            // 添加物品
-            function addItem() {
-                const name = document.getElementById('itemName').value;
-                const category = document.getElementById('itemCategory').value;
-                const spec = document.getElementById('itemSpec').value;
-                const unit = document.getElementById('itemUnit').value;
-                const minStock = parseInt(document.getElementById('itemMinStock').value);
-
-                if (!name || !unit || isNaN(minStock)) {
-                    alert('请填写完整信息');
-                    return;
-                }
-
-                const newItem = {
-                    id: itemIdCounter++,
-                    name,
-                    category,
-                    spec,
-                    unit,
-                    minStock,
-                    currentStock: 0
-                };
-
-                items.push(newItem);
-                localStorage.setItem(STORAGE_KEY.ITEMS, JSON.stringify(items));
-                updateUI();
-            }
-
-            // 更新物品列表
-            function updateItemList() {
-                const list = document.getElementById('warningTable');
-                list.innerHTML = '<tr><th>物品名称</th><th>当前库存</th><th>预警值</th></tr>';
-                items.forEach(item => {
-                    const row = list.insertRow();
-                    row.insertCell().textContent = item.name;
-                    row.insertCell().textContent = item.currentStock;
-                    row.insertCell().textContent = item.minStock;
-                    if (item.currentStock < item.minStock) {
-                        row.style.backgroundColor = '#ffcccc';
-                    }
-                });
-            }
-
-            // 更新库存预警
-            function updateWarningTable() {
-                const warningTable = document.getElementById('warningTable');
-                warningTable.innerHTML = '<tr><th>物品名称</th><th>当前库存</th><th>预警值</th></tr>';
-                items.forEach(item => {
-                    const row = warningTable.insertRow();
-                    row.insertCell().textContent = item.name;
-                    row.insertCell().textContent = item.currentStock;
-                    row.insertCell().textContent = item.minStock;
-                    if (item.currentStock < item.minStock) {
-                        row.style.backgroundColor = '#ffcccc';
-                    }
-                });
-            }
-
-            // 更新库存统计
-            function updateInventoryTable() {
-                const inventoryTable = document.getElementById('inventoryTable');
-                inventoryTable.innerHTML = '<tr><th>物品名称</th><th>当前库存</th><th>最低预警</th><th>状态</th></tr>';
-                items.forEach(item => {
-                    const row = inventoryTable.insertRow();
-                    row.insertCell().textContent = item.name;
-                    row.insertCell().textContent = item.currentStock;
-                    row.insertCell().textContent = item.minStock;
-                    row.insertCell().textContent = 
-                        item.currentStock < item.minStock ? '库存不足' : '库存正常';
-                });
-            }
-
-            // 更新选择框选项
-            function updateSelectOptions() {
-                const inSelect = document.getElementById('inItem');
-                const outSelect = document.getElementById('outItem');
-                inSelect.innerHTML = '<option value="">请选择物品</option>';
-                outSelect.innerHTML = '<option value="">请选择物品</option>';
-                items.forEach(item => {
-                    const option = document.createElement('option');
-                    option.value = item.id;
-                    option.textContent = `${item.name} (${item.unit})`;
-                    inSelect.appendChild(option);
-                    outSelect.appendChild(option.cloneNode(true));
-                });
-            }
-
-            // 添加入库记录
-            function addInbound() {
-                const itemId = parseInt(document.getElementById('inItem').value);
-                const quantity = parseInt(document.getElementById('inQuantity').value);
-                const date = document.getElementById('inDate').value;
-
-                if (isNaN(quantity) || !date) {
-                    alert('请输入有效数量和日期');
-                    return;
-                }
-
-                const item = items.find(item => item.id === itemId);
-                if (!item) {
-                    alert('请选择有效物品');
-                    return;
-                }
-
-                item.currentStock += quantity;
-                localStorage.setItem(STORAGE_KEY.ITEMS, JSON.stringify(items));
-
-                const newRecord = {
-                    id: inboundIdCounter++,
-                    itemId,
-                    quantity,
-                    date
-                };
-
-                inboundRecords.push(newRecord);
-                localStorage.setItem(STORAGE_KEY.INBOUND, JSON.stringify(inboundRecords));
-                updateUI();
-            }
-
-            // 添加出库记录
-            function addOutbound() {
-                const itemId = parseInt(document.getElementById('outItem').value);
-                const quantity = parseInt(document.getElementById('outQuantity').value);
-                const date = document.getElementById('outDate').value;
-
-                if (isNaN(quantity) || !date) {
-                    alert('请输入有效数量和日期');
-                    return;
-                }
-
-                const item = items.find(item => item.id === itemId);
-                if (!item) {
-                    alert('请选择有效物品');
-                    return;
-                }
-
-                if (item.currentStock < quantity) {
-                    alert('库存不足');
-                    return;
-                }
-
-                item.currentStock -= quantity;
-                localStorage.setItem(STORAGE_KEY.ITEMS, JSON.stringify(items));
-
-                const newRecord = {
-                    id: outboundIdCounter++,
-                    itemId,
-                    quantity,
-                    date
-                };
-
-                outboundRecords.push(newRecord);
-                localStorage.setItem(STORAGE_KEY.OUTBOUND, JSON.stringify(outboundRecords));
-                updateUI();
-            }
-
-            // 导出数据
-            function exportData() {
-                const data = {
-                    items,
-                    inboundRecords,
-                    outboundRecords
-                };
-
-                const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'temple_inventory_' + new Date().toISOString().slice(0,10) + '.json';
-                a.click();
-            }
-
-            // 导入数据
-            function importData() {
-                const fileInput = document.createElement('input');
-                fileInput.type = 'file';
-                fileInput.accept = '.json';
-                fileInput.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        try {
-                            const importedData = JSON.parse(e.target.result);
-                            if (
-                                importedData.items &&
-                                importedData.inboundRecords &&
-                                importedData.outboundRecords
-                            ) {
-                                items = importedData.items;
-                                inboundRecords = importedData.inboundRecords;
-                                outboundRecords = importedData.outboundRecords;
-                                localStorage.setItem(STORAGE_KEY.ITEMS, JSON.stringify(items));
-                                localStorage.setItem(STORAGE_KEY.INBOUND, JSON.stringify(inboundRecords));
-                                localStorage.setItem(STORAGE_KEY.OUTBOUND, JSON.stringify(outboundRecords));
-                                updateUI();
-                                alert('数据导入成功');
-                            } else {
-                                alert('无效的数据格式');
-                            }
-                        } catch (error) {
-                            alert('数据解析失败');
-                        }
-                    };
-                    reader.readAsText(file);
-                };
-                fileInput.click();
-            }
-
-            // 初始化界面
-            updateUI();
-        </script>
+    <!-- 物品管理 -->
+    <div class="card">
+      <h2>📦 物品管理</h2>
+      <div class="form-grid">
+        <input type="text" id="itemName" placeholder="物品名称" required>
+        <input type="text" id="itemCategory" placeholder="分类">
+        <input type="text" id="itemSpec" placeholder="规格">
+        <input type="text" id="itemUnit" placeholder="单位">
+        <input type="number" id="itemQuantity" placeholder="初始数量" min="0">
+        <input type="number" id="itemMin" placeholder="最低库存" min="0">
+      </div>
+      <button onclick="addItem()" class="success">➕ 添加物品</button>
+      
+      <div class="table-container mt-20">
+        <table id="itemsTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>名称</th>
+              <th>分类</th>
+              <th>规格</th>
+              <th>单位</th>
+              <th>库存</th>
+              <th>预警值</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
     </div>
+
+    <!-- 入库管理 -->
+    <div class="card">
+      <h2>⬇️ 入库管理</h2>
+      <div class="form-grid">
+        <select id="inboundItem"></select>
+        <input type="number" id="inboundQty" placeholder="数量" min="0.01" step="0.01">
+        <input type="text" id="inboundSource" placeholder="来源">
+        <input type="date" id="inboundDate" required>
+        <input type="text" id="inboundOperator" placeholder="经手人">
+      </div>
+      <button onclick="addInbound()">📥 提交入库</button>
+      
+      <div class="table-container mt-20">
+        <table id="inboundTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>物品</th>
+              <th>数量</th>
+              <th>来源</th>
+              <th>日期</th>
+              <th>经手人</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 出库管理 -->
+    <div class="card">
+      <h2>⬆️ 出库管理</h2>
+      <div class="form-grid">
+        <select id="outboundItem"></select>
+        <input type="number" id="outboundQty" placeholder="数量" min="0.01" step="0.01">
+        <input type="text" id="outboundPurpose" placeholder="用途">
+        <input type="text" id="outboundReceiver" placeholder="领用人">
+        <input type="date" id="outboundDate" required>
+      </div>
+      <button onclick="addOutbound()">📤 提交出库</button>
+      
+      <div class="table-container mt-20">
+        <table id="outboundTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>物品</th>
+              <th>数量</th>
+              <th>用途</th>
+              <th>领用人</th>
+              <th>日期</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 数据管理 -->
+    <div class="card">
+      <h2>📁 数据管理</h2>
+      <div class="form-grid">
+        <button onclick="exportData('json')" class="success">💾 导出JSON</button>
+        <button onclick="exportData('csv')" class="success">📊 导出Excel</button>
+        <input type="file" id="importFile" accept=".json" style="display: none;">
+        <button onclick="document.getElementById('importFile').click()">📂 导入数据</button>
+        <button onclick="confirmReset()" class="danger">⚠️ 重置系统</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const store = {
+  init() {
+    this.items = JSON.parse(localStorage.getItem('items')) || [];
+    this.inbound = JSON.parse(localStorage.getItem('inbound')) || [];
+    this.outbound = JSON.parse(localStorage.getItem('outbound')) || [];
+    this.counters = JSON.parse(localStorage.getItem('counters')) || { 
+      item: Math.max(...this.items.map(i => i.id), 0) + 1 || 1,
+      in: Math.max(...this.inbound.map(i => i.id), 0) + 1 || 1,
+      out: Math.max(...this.outbound.map(o => o.id), 0) + 1 || 1
+    };
+  },
+
+  save() {
+    localStorage.setItem('items', JSON.stringify(this.items));
+    localStorage.setItem('inbound', JSON.stringify(this.inbound));
+    localStorage.setItem('outbound', JSON.stringify(this.outbound));
+    localStorage.setItem('counters', JSON.stringify(this.counters));
+  }
+};
+
+const app = {
+  init() {
+    store.init();
+    this.bindEvents();
+    this.renderAll();
+  },
+
+  bindEvents() {
+    document.getElementById('importFile').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.items && data.inbound && data.outbound) {
+            Object.assign(store, data);
+            store.save();
+            this.renderAll();
+            alert('数据导入成功！');
+          }
+        } catch {
+          alert('文件格式错误！');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    if ('ontouchstart' in window) {
+      document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('focus', () => {
+          window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
+        });
+      });
+    }
+  },
+
+  addItem() {
+    const item = {
+      id: store.counters.item++,
+      name: document.getElementById('itemName').value.trim(),
+      category: document.getElementById('itemCategory').value.trim(),
+      spec: document.getElementById('itemSpec').value.trim(),
+      unit: document.getElementById('itemUnit').value.trim(),
+      quantity: parseFloat(document.getElementById('itemQuantity').value) || 0,
+      min: parseFloat(document.getElementById('itemMin').value) || 0
+    };
+
+    if (!item.name) return alert('请输入物品名称');
+    store.items.push(item);
+    store.save();
+    this.clearForm('item');
+    this.renderAll();
+  },
+
+  addInbound() {
+    const record = {
+      id: store.counters.in++,
+      itemId: parseInt(document.getElementById('inboundItem').value),
+      quantity: parseFloat(document.getElementById('inboundQty').value),
+      source: document.getElementById('inboundSource').value.trim(),
+      date: document.getElementById('inboundDate').value || new Date().toISOString().slice(0,10),
+      operator: document.getElementById('inboundOperator').value.trim()
+    };
+
+    if (!record.itemId || !record.quantity) return alert('请填写必要信息');
+    
+    const item = store.items.find(i => i.id === record.itemId);
+    item.quantity += record.quantity;
+    store.inbound.push(record);
+    store.save();
+    this.clearForm('inbound');
+    this.renderAll();
+  },
+
+  addOutbound() {
+    const record = {
+      id: store.counters.out++,
+      itemId: parseInt(document.getElementById('outboundItem').value),
+      quantity: parseFloat(document.getElementById('outboundQty').value),
+      purpose: document.getElementById('outboundPurpose').value.trim(),
+      receiver: document.getElementById('outboundReceiver').value.trim(),
+      date: document.getElementById('outboundDate').value || new Date().toISOString().slice(0,10)
+    };
+
+    if (!record.itemId || !record.quantity) return alert('请填写必要信息');
+    
+    const item = store.items.find(i => i.id === record.itemId);
+    if (item.quantity < record.quantity) return alert('库存不足！');
+    
+    item.quantity -= record.quantity;
+    store.outbound.push(record);
+    store.save();
+    this.clearForm('outbound');
+    this.renderAll();
+  },
+
+  deleteItem(id) {
+    if (!confirm('确定删除？相关出入库记录也将被清除！')) return;
+    
+    store.items = store.items.filter(i => i.id !== id);
+    store.inbound = store.inbound.filter(r => r.itemId !== id);
+    store.outbound = store.outbound.filter(r => r.itemId !== id);
+    store.save();
+    this.renderAll();
+  },
+
+  renderAll() {
+    this.renderItems();
+    this.renderInbound();
+    this.renderOutbound();
+    this.renderSelectOptions();
+  },
+
+  renderItems() {
+    const tbody = document.querySelector('#itemsTable tbody');
+    tbody.innerHTML = store.items.map(item => `
+      <tr>
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.category}</td>
+        <td>${item.spec}</td>
+        <td>${item.unit}</td>
+        <td>${item.quantity.toFixed(2)}</td>
+        <td>${item.min}</td>
+        <td>
+          <button onclick="app.deleteItem(${item.id})" class="danger">删除</button>
+        </td>
+      </tr>
+    `).join('');
+  },
+
+  renderInbound() {
+    const tbody = document.querySelector('#inboundTable tbody');
+    tbody.innerHTML = store.inbound.map(record => {
+      const item = store.items.find(i => i.id === record.itemId) || {};
+      return `
+        <tr>
+          <td>${record.id}</td>
+          <td>${item.name || '已删除'}</td>
+          <td>${record.quantity.toFixed(2)}</td>
+          <td>${record.source}</td>
+          <td>${record.date}</td>
+          <td>${record.operator}</td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  renderOutbound() {
+    const tbody = document.querySelector('#outboundTable tbody');
+    tbody.innerHTML = store.outbound.map(record => {
+      const item = store.items.find(i => i.id === record.itemId) || {};
+      return `
+        <tr>
+          <td>${record.id}</td>
+          <td>${item.name || '已删除'}</td>
+          <td>${record.quantity.toFixed(2)}</td>
+          <td>${record.purpose}</td>
+          <td>${record.receiver}</td>
+          <td>${record.date}</td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  renderSelectOptions() {
+    const renderOptions = (selectId) => {
+      const select = document.getElementById(selectId);
+      select.innerHTML = store.items.map(item => `
+        <option value="${item.id}">${item.name} (当前库存: ${item.quantity})</option>
+      `).join('');
+    };
+    renderOptions('inboundItem');
+    renderOptions('outboundItem');
+  },
+
+  clearForm(type) {
+    const forms = {
+      item: ['itemName', 'itemCategory', 'itemSpec', 'itemUnit', 'itemQuantity', 'itemMin'],
+      inbound: ['inboundQty', 'inboundSource', 'inboundOperator', 'inboundDate'],
+      outbound: ['outboundQty', 'outboundPurpose', 'outboundReceiver', 'outboundDate']
+    };
+    forms[type].forEach(id => document.getElementById(id).value = '');
+  },
+
+  exportData(format) {
+    if (format === 'json') {
+      const data = {
+        items: store.items,
+        inbound: store.inbound,
+        outbound: store.outbound,
+        counters: store.counters
+      };
+      const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+      this.downloadFile(blob, `仓库备份_${this.getDateString()}.json`);
+    } else if (format === 'csv') {
+      const csvContent = [
+        '\ufeff物品数据\n' + this.generateCSV('items'),
+        '\n入库记录\n' + this.generateCSV('inbound'),
+        '\n出库记录\n' + this.generateCSV('outbound')
+      ].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+      this.downloadFile(blob, `仓库数据_${this.getDateString()}.csv`);
+    }
+  },
+
+  generateCSV(type) {
+    let headers = [], rows = [];
+    switch(type) {
+      case 'items':
+        headers = ['ID', '名称', '分类', '规格', '单位', '当前库存', '最低库存'];
+        rows = store.items.map(item => [
+          item.id,
+          this.escapeCSV(item.name),
+          this.escapeCSV(item.category),
+          this.escapeCSV(item.spec),
+          this.escapeCSV(item.unit),
+          item.quantity,
+          item.min
+        ]);
+        break;
+      case 'inbound':
+        headers = ['ID', '物品ID', '物品名称', '数量', '来源', '日期', '经手人'];
+        rows = store.inbound.map(record => {
+          const item = store.items.find(i => i.id === record.itemId) || {};
+          return [
+            record.id,
+            record.itemId,
+            this.escapeCSV(item.name),
+            record.quantity,
+            this.escapeCSV(record.source),
+            record.date,
+            this.escapeCSV(record.operator)
+          ];
+        });
+        break;
+      case 'outbound':
+        headers = ['ID', '物品ID', '物品名称', '数量', '用途', '领用人', '日期'];
+        rows = store.outbound.map(record => {
+          const item = store.items.find(i => i.id === record.itemId) || {};
+          return [
+            record.id,
+            record.itemId,
+            this.escapeCSV(item.name),
+            record.quantity,
+            this.escapeCSV(record.purpose),
+            this.escapeCSV(record.receiver),
+            record.date
+          ];
+        });
+        break;
+    }
+    return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+  },
+
+  escapeCSV(str) {
+    return typeof str === 'string' ? `"${str.replace(/"/g, '""')}"` : '';
+  },
+
+  downloadFile(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  getDateString() {
+    return new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  },
+
+  confirmReset() {
+    if (confirm('确定要重置所有数据吗？此操作不可恢复！')) {
+      localStorage.clear();
+      location.reload();
+    }
+  }
+};
+
+app.init();
+
+window.addItem = () => app.addItem();
+window.addInbound = () => app.addInbound();
+window.addOutbound = () => app.addOutbound();
+window.exportData = (format) => app.exportData(format);
+window.confirmReset = () => app.confirmReset();
+</script>
 </body>
 </html>
